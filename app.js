@@ -28,7 +28,8 @@ class UI
         <td>${book.title}</td>
         <td>${book.author}</td>
         <td>${book.isbn}</td>
-        <td><a href="#" class="btn btn-danger btn-sm delete">X</a></td>
+        <td><a href="#" class="btn btn-danger btn-sm delete">Supprimer</a>  
+        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#myModal" onclick="editLine(this)"">Editer</button></td>
         `;
 
         list.appendChild(row);
@@ -43,9 +44,15 @@ class UI
 
     static deleteBook(element)
     {
-        //Storage.deleteBook()
         element.parentElement.parentElement.remove();
         UI.showAlert("Suppression réussie.","success")
+    }
+
+    static updateBooks()
+    {
+        document.querySelector("#book-list").innerHTML = "";
+        UI.displayBooks();
+
     }
 
     static showAlert(message, className)
@@ -95,9 +102,20 @@ class Storage{
         const books = Storage.getBooks();
         books.forEach((book,index) =>
         {
-            console.log("books.isnb :" + book.isbn);
-            console.log("      isnb :" + isbn);
             if(book.isbn === isbn){console.log("match!");books.splice(index,1)}
+        });
+        localStorage.setItem('books', JSON.stringify(books));
+    }
+
+    static editBook(isbn,title,author)
+    {
+        const books = Storage.getBooks();
+        books.forEach((book,index) =>
+        {
+            if(book.isbn === isbn)
+            {
+                books[index] = new Book(title, author, isbn);
+            }
         });
         localStorage.setItem('books', JSON.stringify(books));
     }
@@ -109,7 +127,7 @@ document.addEventListener('DOMContentLoaded', UI.displayBooks());
 //Event: Add a Book
 document.querySelector('#book-form').addEventListener('submit', (e) =>
     {
-        // Prevent actual submit (???)
+        // Prevent actual submit 
         e.preventDefault();
 
         //Get values
@@ -118,9 +136,26 @@ document.querySelector('#book-form').addEventListener('submit', (e) =>
         const isbn = document.querySelector('#isbn').value;
 
         //Validate
+        const books = Storage.getBooks();
+        let isbnNotUnique = false;
+        books.forEach((book) =>
+        {
+            if(book.isbn === isbn)
+            {
+                isbnNotUnique = true
+            }
+        });
         if(title === '' || author === '' || isbn === '')
         {
             UI.showAlert("Remplissez tout les champs du formulaire s'il vous plait.","danger")
+        }
+        else if(!(isbn.length == 10 || isbn.length == 13)) 
+        {
+            UI.showAlert("L'ISBN doit faire 10 ou 13 caractères","danger")
+        }
+        else if (isbnNotUnique) 
+        {
+            UI.showAlert("L'ISBN doit être unique dans la liste","danger")
         }
         else
         {
@@ -141,9 +176,59 @@ document.querySelector('#book-list').addEventListener('click', (e) =>
     {
         if(e.target.classList.contains('delete'))
         {
-            console.log(e.target.parentElement.previousElementSibling.textContent);
             Storage.removeBook(e.target.parentElement.previousElementSibling.textContent);
             UI.deleteBook(e.target);
         };
     }
 );
+
+//Event: click on edit button
+function editLine(e)
+{
+    //get data
+    let isbn = e.parentElement.previousElementSibling.textContent;
+    let auteur = e.parentElement.previousElementSibling.previousElementSibling.textContent;
+    let titre = e.parentElement.previousElementSibling.previousElementSibling.previousElementSibling.textContent;
+
+    //print data
+    document.getElementById('title-edit').value = titre;
+    document.getElementById('author-edit').value = auteur;
+    document.getElementById('isbn-edit').value = isbn;
+    document.getElementById('author-edit').value = auteur;
+
+}
+
+//Event: edit a book
+document.querySelector('#book-form-edit').addEventListener('submit', (e) =>
+    {
+        // Prevent actual submit 
+        e.preventDefault();
+
+        //Get values
+        const title = document.querySelector('#title-edit').value;
+        const author = document.querySelector('#author-edit').value;
+        const isbn = document.querySelector('#isbn-edit').value;
+
+        //Validate
+        if(title === '' || author === '' || isbn === '')
+        {
+            UI.showAlert("Remplissez tout les champs du formulaire s'il vous plait.","danger")
+        }
+        else if(!(isbn.length == 10 || isbn.length == 13)) 
+        {
+            UI.showAlert("L'ISBN doit faire 10 ou 13 caractères","danger")
+        }
+        else
+        {
+            //edit book in storage
+            Storage.editBook(isbn,title,author)
+            UI.updateBooks()
+
+            //Clear modale
+            var myModal = new bootstrap.Modal(document.getElementById('myModal'))
+            console.log(myModal)
+            myModal.hide()
+        }
+    }
+);
+

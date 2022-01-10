@@ -6,41 +6,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://kit.fontawesome.com/fe3a64cdbb.js" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://bootswatch.com/5/litera/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
     <title>MyBookList</title>
   </head>
 
   <body>
-      <div class="container mt-4">
-        <h1 class="display-4 text-center">
-          <i class="fas fa-book-open text-primary"></i>
-          My<span class="text-primary">Book</span>List
-        </h1>
-        <form id="book-form">
-            <div class="form-group">
-                <label for="title" class="fw-bold mt-2">Titre</label>
-                <input type="text" id="title" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="author"class="fw-bold mt-2">Auteur</label>
-                <input type="text" id="author" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="isbn" class="fw-bold mt-2   ">ISBN</label>
-                <input type="text" id="isbn" class="form-control">
-            </div>
-            <input type="submit" value="Ajouter le livre" class="btn btn-primary w-100 mt-4">
-        </form>
-        <table class="table table-striped mt-5">
-            <thead>
-                <tr>
-                    <th>Titre</th>
-                    <th>Auteur</th>
-                    <th>ISBN</th>
-                </tr>
-            </thead>
-            <tbody id="book-list"><tbody>
-        </table>
+    <!-- The Modal -->
+    <div class="modal fade" id="myModal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Formulaire d'édition</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+            <form id="book-form-edit">
+              <div class="form-group">
+                  <label for="title" class="fw-bold mt-2">Titre</label>
+                  <input type="text" id="title-edit" class="form-control">
+              </div>
+              <div class="form-group">
+                  <label for="author"class="fw-bold mt-2">Auteur</label>
+                  <input type="text" id="author-edit" class="form-control">
+              </div>
+              <div class="form-group">
+                  <label for="isbn" class="fw-bold mt-2   ">ISBN</label>
+                  <input type="text" id="isbn-edit" class="form-control" disabled="">
+              </div>
+              <div class="float-end">
+                <input type="submit" value="Editer le livre" class="btn btn-primary mt-4">
+                <button type="button" class="btn btn-danger mt-4" data-bs-dismiss="modal">Annuler</button>
+              </div>
+          </form>
+          </div>
+
+
+        </div>
       </div>
+    </div>
+
+    <div class="container mt-4"> 
+      <!-- Title -->
+      <h1 class="display-4 text-center">
+        <i class="fas fa-book-open text-primary"></i>
+        My<span class="text-primary">Book</span>List
+      </h1>
+
+      <!-- Form -->
+      <form id="book-form">
+          <div class="form-group">
+              <label for="title" class="fw-bold mt-2">Titre</label>
+              <input type="text" id="title" class="form-control">
+          </div>
+          <div class="form-group">
+              <label for="author"class="fw-bold mt-2">Auteur</label>
+              <input type="text" id="author" class="form-control">
+          </div>
+          <div class="form-group">
+              <label for="isbn" class="fw-bold mt-2   ">ISBN</label>
+              <input type="text" id="isbn" class="form-control">
+          </div>
+          <input type="submit" value="Ajouter le livre" class="btn btn-primary w-100 mt-4">
+      </form>
+
+      <!-- Book Liste -->
+      <table class="table table-striped mt-5">
+          <thead>
+              <tr>
+                  <th style="width: 28%;">Titre</th>
+                  <th style="width: 28%;">Auteur</th>
+                  <th style="width: 28%;">ISBN</th>
+                  <th></th>
+              </tr>
+          </thead>
+          <tbody id="book-list"><tbody>
+      </table>
+    </div>
   <script src="app.js"></script>
   </body>
 
